@@ -1,4 +1,5 @@
-/* rosrun stage_ros stageros $(rospack find RT1_assignment2)/world/my_world.world */
+/* rosrun stage_ros stageros $(rospack find RT1_assignment2)/world/my_world.world 
+   rosrun RT1_assignment2 racer_node */
 
 #include "ros/ros.h"
 #include "algorithm"
@@ -6,22 +7,23 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
+void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg );
 void scanSectors( float * ranges, float * sectors );
-void logic( float * sectors, geometry_msgs::Twist my_vel );
-double integral( float values[], int start, int end );
+int logic( float * sectors, geometry_msgs::Twist my_vel );
+void integral_logic( float * ranges, geometry_msgs::Twist my_vel );
+double integral( float * values, int start, int end );
 void drive( float straight, float turn, geometry_msgs::Twist my_vel );
 
-float d_br = 1.2; // float: Alert distance for avoiding obstacles, distance break.
-float a_th = 20;
+float d_br; // float: Alert distance for avoiding obstacles, distance break.
 float speed;
 
-int nsect = 51; // int: Number of sectors in which the space around the robot is divided.
+int nsect = 7; // int: Number of sectors in which the space around the robot is divided.
 int front = std::floor( nsect / 2 );
 int sector_nelem = std::floor( 721/nsect );
 
 ros::Publisher pub; // Global, so I can use it also in the Callback.
 
-void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg) {
+void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg ) {
 
 	float sectors[nsect];
 	float ranges[721];
@@ -36,7 +38,10 @@ void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg) {
 
 	scanSectors(ranges, sectors);
 
-	logic(sectors, my_vel);
+	if ( !logic(sectors, my_vel) ) {
+
+		integral_logic(ranges, my_vel);
+	}
 }
 
 void scanSectors(float * ranges, float * sectors) {
@@ -58,51 +63,59 @@ void scanSectors(float * ranges, float * sectors) {
     	}
 
     }
-    ROS_INFO("front distance : %f", sectors[front]);
-
 }
 
-void logic( float * sectors, geometry_msgs::Twist my_vel ) {
+int logic( float * sectors, geometry_msgs::Twist my_vel ) {
 
 	double right_area, left_area;
 
 	if ( sectors[front] > d_br ) {
 
-		right_area = integral( sectors, front - 10, front );
-		left_area = integral( sectors, front, front + 10 );
+		ROS_INFO("front distance : %f, free.", sectors[front]);
 
-		ROS_INFO("left-side area : %.2f", left_area);
-		ROS_INFO("rigt-side area : %.2f", right_area);
+		if ( sectors[front+1] <= 0.6 * d_br ) {
+            drive( speed/2, -2.5/speed, my_vel );
+            return 1;
 
+		} else if ( sectors[front-1] <= 0.6 * d_br ) {
+            drive( speed/2, 2.5/speed, my_vel );
+            return 1;
+		}
 
-
-		if ( (left_area >= a_th) && (right_area >= a_th) ) {
-
-			if ( sectors[front-1] < d_br ) {
-				drive( speed/2, 0.8, my_vel );
-				ROS_INFO("right sector control obstacle");
-
-			} else if ( sectors[front+1] < d_br ) {
-				drive( speed/2, -0.8, my_vel );
-				ROS_INFO("left sector control obstacle");
-
-			} else {
-				drive( speed, 0.0, my_vel );
-			}
-
-		} else if ( left_area > right_area ) {
-			drive( speed/3, 0.4, my_vel );
-			ROS_INFO("right area control obstacle");
+		if ( sectors[front] > 2 * d_br ) {
+		    drive( speed, 0.0, my_vel );
+		    return 1;
 
 		} else {
-			drive( speed/3, -0.4, my_vel );
-			ROS_INFO("left area control obstacle");
+		    float slow_down = ( (3 * sectors[front]) / (4 * d_br) ) - 1/2;
+		    drive( speed * slow_down, 0.0, my_vel );
+		    return 1;
 		}
 
 	} else {
 
-		right_area = integral( sectors, 0, front );
-		left_area = integral( sectors, front, nsect );
+		for ( int j = 1; j <= ( front - 1 ); j++ ) { // Looks in all sectors without the frontal one.
+
+		    if ( (sectors[front+j] >= 1.5 * d_br ) && ( sectors[front+j] >= sectors[front-j] ) ){ // First looks left.
+		        drive( 0.2, 1.0, my_vel );
+		        ROS_INFO("front distance : %f, obstacle, left free.", sectors[front]);
+		        return 1;
+
+		    } else if ( ( sectors[front-j] >= 1.5 * d_br ) && ( sectors[front-j] >= sectors[front+j] ) ) { // Then looks right.
+		        drive( 0.2, -1.0, my_vel );
+		        ROS_INFO("front distance : %f, obstacle, right free.", sectors[front]);
+		        return 1;
+		    }
+		}
+		return 0;
+	}
+	return -1;
+}
+
+void integral_logic( float * ranges, geometry_msgs::Twist my_vel ) {
+
+	double right_area = integral( ranges, 0, 360 );
+	double left_area = integral( ranges, 360, 721 );
 
 		ROS_INFO("OBSTACLE, left-side area : %.2f", left_area);
 		ROS_INFO("OBSTACLE, rigt-side area : %.2f", right_area);
@@ -116,7 +129,6 @@ void logic( float * sectors, geometry_msgs::Twist my_vel ) {
 		} else {
 			drive( 0.0, 1.0, my_vel );
 		}
-	}
 }
 
 double integral( float * values, int start, int end ) {
@@ -128,7 +140,7 @@ double integral( float * values, int start, int end ) {
 	return result;
 }
 
-void drive( float straight, float turn, geometry_msgs::Twist my_vel ){
+void drive( float straight, float turn, geometry_msgs::Twist my_vel ) {
 
 	my_vel.linear.x = straight;
 	my_vel.angular.z = turn;
@@ -145,7 +157,8 @@ int main ( int argc, char ** argv ) {
 
 	pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
-	speed = 5;
+	speed = 4;
+	d_br = 1.5 + speed / 50;
 
 	// ros::ServiceClient client = nh.serviceClient<turtlesim::Spawn>("/spawn");
 
