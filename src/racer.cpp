@@ -1,11 +1,13 @@
 /* rosrun stage_ros stageros $(rospack find RT1_assignment2)/world/my_world.world 
-   rosrun RT1_assignment2 racer_node */
+   rosrun RT1_assignment2 racer_node 
+   rosrun RT1_assignment2 pilot_teleop_key_node */
 
 #include "ros/ros.h"
 #include "algorithm"
 #include "cmath"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
+#include "rt1_assignment2/Command.h"
 
 void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg );
 void scanSectors( float * ranges, float * sectors );
@@ -13,6 +15,7 @@ int logic( float * sectors, geometry_msgs::Twist my_vel );
 void integral_logic( float * ranges, geometry_msgs::Twist my_vel );
 double integral( float * values, int start, int end );
 void drive( float straight, float turn, geometry_msgs::Twist my_vel );
+bool server_response( rt1_assignment2::Command::Request &req, rt1_assignment2::Command::Response &res );
 
 float d_br; // float: Alert distance for avoiding obstacles, distance break.
 float speed;
@@ -147,29 +150,40 @@ void drive( float straight, float turn, geometry_msgs::Twist my_vel ) {
 	pub.publish(my_vel);
 }
 
-int main ( int argc, char ** argv ) {
+bool server_response( rt1_assignment2::Command::Request &req, rt1_assignment2::Command::Response &res ) {
 
+	ROS_INFO("Begin server response");
+
+	if ( req.command == 'a' && speed > 0 ) {
+		ROS_INFO("Decrease speed");
+		speed = speed - 0.5;
+	}
+	if ( req.command == 's' ) {
+		ROS_INFO("Increase speed");
+		speed = speed + 0.5;
+	}
+
+	d_br = 1.5 + speed / 50;
+
+	res.max_speed = speed;
+
+	return true;
+}
+
+int main ( int argc, char ** argv ) {
+  
 	ros::init(argc, argv, "racer");
 
 	ros::NodeHandle nh;
 
+	speed = 0;
+	d_br = 1.5;
+
 	ros::Subscriber sub = nh.subscribe("base_scan", 1, functionCallback);
 
+	ros::ServiceServer service = nh.advertiseService("/command", server_response);
+
 	pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-
-	speed = 4;
-	d_br = 1.5 + speed / 50;
-
-	// ros::ServiceClient client = nh.serviceClient<turtlesim::Spawn>("/spawn");
-
-	// turtlesim::Spawn srv1;
-	// srv1.request.x = 1.0;
-	// srv1.request.y = 5.0;
-	// srv1.request.theta = 0.0;
-	// srv1.request.name = "rt1_turtle";
-
-	// client1.waitForExistence();
-	// client1.call(srv1);
 	
 	ros::spin();
 
