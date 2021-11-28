@@ -1,0 +1,5 @@
+<launch>
+   <node name="world" pkg="stage_ros" type="stageros" args="$(find rt1_assignment2)/world/my_world.world" />
+   <node name="racer" pkg="rt1_assignment2" type="racer_node" launch-prefix="xterm -e" />
+   <node name="keyboard_pilot" pkg="rt1_assignment2" type="keyboard_pilot_node" output="screen" />
+</launch>
