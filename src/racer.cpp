@@ -85,11 +85,11 @@ int logic( float * sectors ) {
 		   the track. */
 		if ( (sectors[front+1] <= 0.8 * d_br) && (sectors[front-1] >= d_br) ) {
 			ROS_INFO("dist: %.2f, speed: %.2f, free road, turn right", sectors[front], speed);
-            drive( speed, -1.5 );
+            drive( speed, -1 );
 
 		} else if ( (sectors[front-1] <= 0.8 * d_br) && (sectors[front+1] >= d_br) ) {
 			ROS_INFO("dist: %.2f, speed: %.2f, free road, turn left", sectors[front], speed);
-            drive( speed, 1.5 );
+            drive( speed, 1 );
 
 		} else {
 			ROS_INFO("dist: %.2f, speed: %.2f, free road", sectors[front], speed);
@@ -168,7 +168,7 @@ bool server_response( rt1_assignment2::Command::Request &req, rt1_assignment2::C
     received and replies with the updated velocity.
     */
 
-	if ( req.command == 'a' && speed > 0 ) {
+	if ( req.command == 'a' && speed >= 0.1 ) {
 		ROS_INFO("Decrease speed");
 		speed = speed - 0.1;
 	}
@@ -209,7 +209,7 @@ int main ( int argc, char ** argv ) {
 	   laser scanner on the robot. */
 	ros::Subscriber sub = nh.subscribe("/base_scan", 1, functionCallback);
 
-	/* Creates a service for the keyboard_pilot_node to control the speed of the robot, to reset the position 
+	/* Creates a service for the keyboard_pilot_node to control the speed of the robot, to reset the position, 
 	   and to exit from the simulation. */
 	ros::ServiceServer service = nh.advertiseService("/command", server_response);
 
