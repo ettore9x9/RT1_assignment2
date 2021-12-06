@@ -28,7 +28,7 @@ ros::Publisher pub;                           // Publisher on cmd_vel.
 /* FUNCTIONS */
 void functionCallback ( const sensor_msgs::LaserScan::ConstPtr& msg ) {
 	/*
-	Function callback for the base_ scan subscriber, it is executed each time something is published 
+	Function callback for the base_scan subscriber, it is executed each time something is published 
 	in this specific topic.
 	*/
 
