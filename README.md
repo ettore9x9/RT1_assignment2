@@ -31,7 +31,7 @@ Assignment
 >The robot can divide the scanned space into sectors, finding the nearest obstacle in each one. The variable *nsect* specifies the number of sectors (default value = 9); changing this parameter can compromise the operation. The frontal sector is the one identified by the *front* value.
 
 <p align="center">
-<img src="./images/sectorsc.jpg" width=20%>
+<img src="./images/sectors.jpg" width=20%>
 </p>
 
 
