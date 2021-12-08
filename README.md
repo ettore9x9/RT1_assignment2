@@ -51,6 +51,7 @@ Assignment
 
 >This function is the callback for the base_scan subscriber; it is executed each time something is published on this specific topic.
 >First, it calls the `scanSectors` function, then the function `logic` implements the choice made through sectors. If the function `logic` does not take any decision, then the `integral_logic` function is called.
+
 >This flowchart represents the sequence of functions executed every time something is published on the base_scan topic:
 
 <p align="center">
