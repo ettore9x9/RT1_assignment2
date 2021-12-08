@@ -30,6 +30,10 @@ Assignment
 
 >The robot can divide the scanned space into sectors, finding the nearest obstacle in each one. The variable *nsect* specifies the number of sectors (default value = 9); changing this parameter can compromise the operation. The frontal sector is the one identified by the *front* value.
 
+<p align="center">
+<img src="./images/sectorsc.jpg" width=20%>
+</p>
+
 
 ### racer_node
 
@@ -47,6 +51,11 @@ Assignment
 
 >This function is the callback for the base_scan subscriber; it is executed each time something is published on this specific topic.
 >First, it calls the `scanSectors` function, then the function `logic` implements the choice made through sectors. If the function `logic` does not take any decision, then the `integral_logic` function is called.
+>This flowchart represents the sequence of functions executed every time something is published on the base_scan topic:
+
+<p align="center">
+<img src="./images/functionCallback.jpg" width=60%>
+</p>
 
 ##### scanSectors
 
