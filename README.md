@@ -57,7 +57,7 @@ Assignment
 >The `logic` function implements the logical part of the code, choosing whether to drive the robot forward or to make it turn to avoid obstacles. It's based on the information in the *sectors* vector, so previously filtered by the `scanSector` function. According to the choice made, it calls the `drive` function to move the robot. It returns 1 if it has made its choice, 1 otherwise.
 
 <p align="center">
-<img src="https://github.com/ettore9x9/rt1_assignment2/blob/master/images/logic.jpg" width=60%>
+<img src="./images/logic.jpg" width=60%>
 </p>
 
 ##### integral_logic
@@ -65,7 +65,7 @@ Assignment
 >The `integral_logic` function implements the second logical part of the code, and it's executed only when the first one can not make any choice. It can only turn the robot, and it does it based on the information included in the *ranges* vector. It computes the integral (calling the `integral` function) of the distance on the right-side and the left-side of the robot, obtaining the left and right area. Lastly, comparing these two values decides where to turn the robot; and calls the `drive` function to move it.
 
 <p align="center">
-<img src="https://github.com/ettore9x9/rt1_assignment2/blob/master/images/integral_logic.jpg" width=60%>
+<img src="./images/integral_logic.jpg" width=60%>
 </p>
 
 ##### integral
@@ -94,7 +94,7 @@ Assignment
 ### Global view
 
 <p align="center">
-<img src="https://github.com/ettore9x9/rt1_assignment2/blob/master/images/global_view.jpg" width=100%>
+<img src="./images/global_view.jpg" width=100%>
 </p>
 
 
