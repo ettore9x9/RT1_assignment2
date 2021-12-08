@@ -97,10 +97,10 @@ Assignment
 <img src="./images/global_view.jpg" width=80%>
 </p>
 
-- ![#008000](https://via.placeholder.com/15/f03c15/000000?text=+) world
-- ![#FF0000](https://via.placeholder.com/15/f03c15/000000?text=+) keyboard_pilot
-- ![#FFFFFF](https://via.placeholder.com/15/f03c15/000000?text=+) racer
-- ![#0000FF](https://via.placeholder.com/15/f03c15/000000?text=+) robot
+- ![#008000](https://via.placeholder.com/15/008000/000000?text=+) world
+- ![#FF0000](https://via.placeholder.com/15/FF0000/000000?text=+) keyboard_pilot
+- ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) racer
+- ![#0000FF](https://via.placeholder.com/15/0000FF/000000?text=+) robot
 
 Possible improvements
 ---------------------
