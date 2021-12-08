@@ -99,7 +99,7 @@ Assignment
 
 ##### User Interface
 
->The interface of the keyboard_pilot_node started from the teleop_twist_keyboard (https://github.com/methylDragon/teleop_twist_keyboard_cpp.git "teleop_twist_keyboard_cpp"), it allows to refresh the same line printing each time the console receives an input.
+>The interface of the keyboard_pilot_node started from the teleop_twist_keyboard ([teleop_twist_keyboard_cpp]https://github.com/methylDragon/teleop_twist_keyboard_cpp.git), it allows to refresh the same line printing each time the console receives an input.
 
 ### Global view
 
