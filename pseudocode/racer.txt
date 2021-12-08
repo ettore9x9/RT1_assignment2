@@ -1,0 +1,108 @@
+function functionCallback {
+
+	call the function scanSectors
+
+	call the function logic
+
+	if it returns 0 {
+		call the function integral_logic
+	}
+}
+
+function scanSectors {
+
+    for all sectors {
+    	for all elements in each sector {
+
+    		if the distance is closer then the actual one {
+    		    update the distance of the sector
+    		}
+
+    	}
+
+    }
+}
+
+function logic {
+
+	if the frontal sector is obstacle-free {
+
+		if there is an obstacle in the front-left sector {
+			drive forward turning a little right
+
+		} else if there is an obtacle in the front-right sector{
+			drive forward turning a little left
+
+		} else {
+			drive forward
+		}
+
+		return 1
+
+	} else, there is an obstacle in the frontal sector {
+
+		for all right and left sectors, starting from the frontal one {
+
+		    if the left sector is free {
+		        turn left
+		    }
+
+		    } else if the right sector is free {
+		    	torn right 
+		    }
+		}
+	}
+	There is no obstacle-free sector, return 0
+}
+
+function integral_logic {
+	
+	compute the right area
+	compute the left area
+
+		if right area > left area {
+			turn right
+
+		} else {
+			turn left
+		}
+}
+
+function server_response {
+
+	if the command is decrease, and the speed is >= 0.1 {
+		decrease the speed
+	}
+	if the command is increase {
+		increase the speed
+	}
+	if the command is reset {
+		set the speed to zero
+	}
+	if the command is quit {
+		exit
+	}
+
+	update the distance break
+
+	send the updated speed to the client
+
+	return true;
+}
+
+function main {
+  	
+  	init the rosnode and the nodehandle
+
+	initialize the variable of speed and distance break
+
+	subscribe to the topic base_scan
+
+	create a server for the command service
+
+	create a publisher to the cmd_vel topic
+	
+	spin
+
+	return 0;
+}

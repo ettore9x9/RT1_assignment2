@@ -111,7 +111,7 @@ int main ( int argc, char ** argv ) {
    }
 
    printf("\n \n");
-   printf("Press ctrl C to exit from the world.\n");
+   printf("Press ctrl C to exit from the world.\n \n");
 
    return 0;
 }

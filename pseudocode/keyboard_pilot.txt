@@ -1,0 +1,42 @@
+funtion getch {
+
+   change terminal's attributes
+
+   get the input character
+
+   set the old attributes
+
+   return the character
+
+}
+
+function main {
+
+   init the rosnode and the nodehandle
+
+   create a client for command service
+
+   create a client for reset_position service
+
+   print the title
+
+   while the command is not quit and the roscore is running {
+
+      call the getch function
+
+      if the command is valid {
+
+         send a request to the command service
+ k
+            if the command is reset {
+               send also a request to the reset_position service
+            }
+
+            print the actual maximum velocity, answered by the command service
+         }
+      } else, the command is not valid {
+         print an error message 
+      }
+   }
+   return 0
+}
