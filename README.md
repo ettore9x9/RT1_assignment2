@@ -116,4 +116,5 @@ Possible improvements
 ---------------------
 
 * Make the robot move more fluently.
-* 
+* Make the robot map the circuit in order to optimize the trajectory.
+* Implements an emergency stop service.
