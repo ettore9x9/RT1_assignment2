@@ -64,7 +64,7 @@ Assignment
 
 ##### logic
 
->The `logic` function implements the logical part of the code, choosing whether to drive the robot forward or to make it turn to avoid obstacles. It's based on the information in the *sectors* vector, so previously filtered by the `scanSector` function. According to the choice made, it calls the `drive` function to move the robot. It returns 1 if it has made its choice, 1 otherwise.
+>The `logic` function implements the logical part of the code, choosing whether to drive the robot forward or to make it turn to avoid obstacles. It's based on the information in the *sectors* vector, so previously filtered by the `scanSector` function. According to the choice made, it calls the `drive` function to move the robot. It returns 1 if it has made its choice, 0 otherwise.
 
 <p align="center">
 <img src="./images/logic.jpg" width=30%>
