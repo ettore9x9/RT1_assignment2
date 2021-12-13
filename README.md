@@ -94,8 +94,7 @@ Assignment
 
 >The keyboard_pilot_node waits until a key is pressed by the user, then asks the racer_node with the `Command` service to perform the command received.
 >The `getch` function is called to acquire a character from keyboard input, setting the attributes of the terminal to avoid pressing enter every time; and returning the character typed from the user.
->If the character is one of the available commands, it sends a request to the racer_node through the `command` server; if the command is the reset one, it also sends a request to the world node through the `reset_positions` service.
-
+>If the character is one of the available commands, it sends a request to the racer_node through the `Command` service; if the command is the reset one, it also sends a request to the world node through the `reset_positions` service.
 
 ##### User Interface
 
